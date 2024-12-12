@@ -1,0 +1,7 @@
+services:
+  app :
+    build: .
+    ports:
+      - 51337:51337
+    environment:
+      - FLAG=mireactf{}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IP Pinger</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 1000px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            text-align: left;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #loading {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IP Pinger</h1>
+        <input type="text" id="ipAddress" placeholder="Enter IP address" />
+        <button id="pingButton">Ping</button>
+        <div id="response"></div>
+        <div id="loading">Sending request...</div>
+    </div>
+
+    <script>
+        const ipAddressInput = document.getElementById('ipAddress');
+        const pingButton = document.getElementById('pingButton');
+        const responseDiv = document.getElementById('response');
+        const loadingDiv = document.getElementById('loading');
+
+
+        pingButton.addEventListener('click', () => {
+            const ipAddress = ipAddressInput.value;
+            if (!ipAddress) return;
+
+            loadingDiv.style.display = 'block';
+            responseDiv.innerHTML = '';
+
+            fetch('/api/pinger', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ip: ipAddress })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                responseDiv.innerHTML = data.message.replace("\n", "<br/>" || JSON.stringify(data));
+            })
+            .catch(error => {
+                loadingDiv.style.display = 'none';
+                responseDiv.textContent = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>
+

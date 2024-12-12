@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #calculation {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            text-align: right; /* Align numbers to the right */
+            font-size: 1.2em; /* Larger font size */
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
+        }
+
+        button {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #d0d0d0;
+        }
+
+        button.operator {
+            background-color: #ff9800; /* Orange for operators */
+            color: white;
+        }
+
+        button.operator:hover {
+            background-color: #cc8000; /* Darker orange on hover */
+        }
+
+        button#calculateButton {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button#calculateButton:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #loading {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculator</h1>
+        <input type="text" id="calculation" readonly />
+        <div class="buttons">
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button class="operator">/</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button class="operator">*</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button class="operator">-</button>
+            <button>0</button>
+            <button>.</button>
+            <button class="operator">+</button>
+            <button id="calculateButton">=</button>
+        </div>
+        <div id="response"></div>
+        <div id="loading">Calculating...</div>
+    </div>
+
+    <script>
+        const calculationInput = document.getElementById('calculation');
+        const calculateButton = document.getElementById('calculateButton');
+        const responseDiv = document.getElementById('response');
+        const loadingDiv = document.getElementById('loading');
+
+        const buttons = document.querySelectorAll('.buttons button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const buttonText = button.textContent;
+                calculationInput.value += buttonText;
+            });
+        });
+
+        calculateButton.addEventListener('click', () => {
+            const calculation = calculationInput.value;
+            if (!calculation) return;
+            calculationInput.value = "";
+
+            loadingDiv.style.display = 'block';
+            responseDiv.textContent = '';
+
+            fetch('/api/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ sign: calculation.replace("=", "") })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingDiv.style.display = 'none';
+                responseDiv.textContent = data.message;
+            })
+            .catch(error => {
+                loadingDiv.style.display = 'none';
+                responseDiv.textContent = `Error: ${error}`;
+            });
+            
+        });
+    </script>
+</body>
+</html>
