@@ -1,7 +1,27 @@
 services:
-  app :
-    build: .
+  app:
+    build: web
     ports:
-      - 31337:31337
+      - "31337:31337"
     environment:
-      - FLAG=mireactf{}
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mireactfdb
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://db:5432"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  db:
+    restart: always
+    image: postgres:15.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=mireactfdb
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
