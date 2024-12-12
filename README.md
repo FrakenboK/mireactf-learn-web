@@ -9,7 +9,7 @@
 | **[headers](tasks/headers/)**                            | Смотрим, как работает простое веб-приложение, и учимся с ним взаимодействовать        |
 | **[senior-jwt-engineer](tasks/headers/)**                | Смотрим на устройство аутентификации и токенов, подделываем jwt                       |
 | **[sql-hunter](tasks/sql-hunter/)**                      | Изучаем устройсто взаимодействия с базой данных через SQL, эксплуатируем простую SQLi |
-| **[]()** | PTH |
+| **[burger-storage](tasks/burger-storage/)**              | Пихаем ../                                                                            |
 | **[pinger](tasks/pinger/)**                              | Пробуем эксплуатировать OS injection                                                  |
 | **[pinger-delux-edition](tasks/pinger-deluxe-edition/)** | Тестим ревшеллы в блайнде                                                             |
 | **[inspector-gadjet](tasks/inspector-gadjet/)**          | Превращаем Python Eval в RCE                                                          |
