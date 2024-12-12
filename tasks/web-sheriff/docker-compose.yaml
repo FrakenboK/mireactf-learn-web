@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  internal-microservice:
+    build:
+      context: internal-microservice
+      dockerfile: ./deploy/Dockerfile
+    environment:
+      - FLAG=mireactf{}
+      
+  gateway-microservice:
+    build:
+      context: gateway-microservice
+      dockerfile: ./Dockerfile
+    ports:
+      - "14337:14337"

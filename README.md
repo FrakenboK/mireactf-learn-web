@@ -13,4 +13,4 @@
 | **[pinger](tasks/pinger/)**                              | Пробуем эксплуатировать OS injection                                                  |
 | **[pinger-delux-edition](tasks/pinger-deluxe-edition/)** | Тестим ревшеллы в блайнде                                                             |
 | **[inspector-gadjet](tasks/inspector-gadjet/)**          | Превращаем Python Eval в RCE                                                          |
-| |
+| **[web-sheriff](tasks/web-sheriff/)**                    | Пробираемся во внутреннюю сеть через SSRF                                             |

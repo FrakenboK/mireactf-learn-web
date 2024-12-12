@@ -17,8 +17,10 @@ def pinger():
     if "sign" not in data:
         return create_resp("Nothing to calculate")
     
-    answer = eval(data["sign"])
-
+    try:
+        answer = eval(data["sign"])
+    except:
+        return create_resp("bebebe")
     return create_resp(answer)
 
 

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Sender</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 500px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .header-group {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-group input{
+            width: 45%;
+        }
+
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #add-header {
+            cursor: pointer;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web Sheriff</h1>
+        <div class="form-group">
+            <label for="url">URL:</label>
+            <input type="text" id="url" placeholder="Enter URL" />
+        </div>
+        <div id="headersContainer">
+            <div class="header-group">
+                <input type="text" placeholder="Header Key" class="header-key"/>
+                <input type="text" placeholder="Header Value" class="header-value"/>
+            </div>
+        </div>
+        <div id="add-header">Add Header</div>
+        <button id="sendButton">Send</button>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('url');
+        const sendButton = document.getElementById('sendButton');
+        const responseDiv = document.getElementById('response');
+        const headersContainer = document.getElementById('headersContainer');
+        const addHeaderButton = document.getElementById('add-header');
+
+
+        addHeaderButton.addEventListener('click', ()=>{
+            const newHeaderGroup = document.createElement('div');
+            newHeaderGroup.className = 'header-group';
+            newHeaderGroup.innerHTML = `
+                <input type="text" placeholder="Header Key" class="header-key"/>
+                <input type="text" placeholder="Header Value" class="header-value"/>
+            `;
+            headersContainer.appendChild(newHeaderGroup);
+        })
+
+        sendButton.addEventListener('click', () => {
+            const url = urlInput.value;
+            if (!url) return;
+
+            const headers = {};
+            const headerGroups = document.querySelectorAll('.header-group');
+            headerGroups.forEach(group => {
+                const keyInput = group.querySelector('.header-key');
+                const valueInput = group.querySelector('.header-value');
+                if(keyInput.value && valueInput.value)
+                    headers[keyInput.value] = valueInput.value
+            })
+
+            responseDiv.textContent = 'Sending request...';
+
+            fetch('/api/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url, headers })
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseDiv.textContent = data.message;
+            })
+            .catch(error => {
+                responseDiv.textContent = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>
